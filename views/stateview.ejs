@@ -14,9 +14,16 @@
   padding: 20px;
   width: 100%;
 }
+img{
+  width: 100%;
+}
 .row{
   width: 100%;
   padding: 10px;
+}
+a{
+    font-size: 6px;
+    vertical-align: top;
 }
 
 p{
@@ -240,20 +247,28 @@ h3{
 }
  td {
   padding-right: 35px;
+  font-size: 6px;
 }
 table{
   display: flexbox;
   align-content: center;
   margin: 100px;
+  margin-left: 10px;
   padding: 5px;
 }
 #ind{
   width: 100%;
 }
 .im {
-  width: 50%;
+    width: 50%;
     margin-top: 5px;
     margin-left: 20px;
+}
+.col-md-4{
+  width: 33%;
+}
+.col-md-8{
+  width: 66%;
 }
 h3{
   font-size:  15px;
@@ -275,6 +290,9 @@ h6{
     height: 55px;
     width: 100%;;
 }
+.alert-info{
+  height: 50px;
+}
 #ac,#to,#de,#re{
   font-size: 6px;
 }
@@ -285,7 +303,7 @@ h5{
   font-size: 6px;
 }
 #data{
-  width: 80%;
+  width: 100%;
 }
 tr{
   width: 100%;
@@ -296,6 +314,9 @@ th {
     font-size: 6px;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
+}
+#im1{
+  width: 100%;
 }
 }
 @media(min-width: 900px){
@@ -678,7 +699,7 @@ hr{
             </tr>
     </table>
   </div>
-  <div class="alert alert-info" role="alert" id="al" style="margin-top: 50px">
+  <div id="al" class="alert alert-info" role="alert"  style="margin-top: 50px">
        <h3><b><%= summary.name %></b></h3>
        </div>
       <div class="alert alert-danger" id="al1" role="alert" >
@@ -708,7 +729,7 @@ hr{
   </table>
 </div>
       <div class="col-md-4">
-    <img src= " <%=summary.plot%> " ,class="im">
+    <img src= " <%=summary.plot%> ">
   </div>
   
 </div>
