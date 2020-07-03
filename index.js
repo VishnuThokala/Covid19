@@ -3,7 +3,7 @@ var app =express();
 var ejs =require('ejs')
 var request =require('request')
 var bodyParser=require('body-parser')
-const port =process.env.PORT||3000 ;
+const port =process.env.PORT||4000 ;
 app.set("view engine", 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -16,7 +16,7 @@ var yyyy = today.getFullYear();
 var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
 if(dd<10) 
 {
-    dd='0'+dd;
+    dd=dd;
 } 
 today = dd+'-'+month[mm]+'-'+yyyy.toString().substr(-2);;
 return today;
@@ -37,8 +37,6 @@ function getNextMonth(){
 
   var mm = today.getMonth()+1; 
   var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
-  
-  
   return month[mm]+'-'+yyyy.toString().substr(-2); 
 }
 app.get('/',(req,res)=>{
@@ -69,20 +67,17 @@ app.get('/',(req,res)=>{
                  else if(data[i]['status']=="Deceased")
                   {
                     deceased=deceased+Number(data[i]['tt']);
-                  }
-                  
-                  
-                
+                  }  
             }
             var c=0;
-            today=getYesDate();
-           
+			today = getYesDate();
+			today
             for(var k=0;k<pdata.length ;k++)
-           {
+			{
              if(pdata[k]['Date']==today){
 				 
 			  predicted = pdata[k]['tt'];
-			
+			  
                break;
              }
            }
@@ -115,39 +110,40 @@ today=getYesDate();
             var stateWisePredicted =0  ,date;
             data = body['states_daily'];
             pdata=pData['states_daily'];
-                    
-            var confirmedArray =[] ;      
-            for(var i=0;i<data.length;i++ ){
+			var confirmedArray = [];      
+             data.forEach(data => {
+                if(data['status']=='Confirmed')
+				{          
+                   stateWiseConfrimed=stateWiseConfrimed+Number(data[req.params.id]);
 
-                if(data[i]['status']=='Confirmed')
-                  {
-                   stateWiseConfrimed=stateWiseConfrimed+Number(data[i][req.params.id]);
-                    
+	
+				
                     confirmedArray.push(stateWiseConfrimed);
                    
                   }
-                 else if(data[i]['status']=="Recovered")
+                 else if(data['status']=="Recovered")
                   {
-                    stateWiseRecovered=stateWiseRecovered+Number(data[i][req.params.id]);
+                    stateWiseRecovered=stateWiseRecovered+Number(data[req.params.id]);
                   }
-                 else if(data[i]['status']=="Deceased")
+                 else if(data['status']=="Deceased")
                   {
-                    stateWiseDeceased=stateWiseDeceased+Number(data[i][req.params.id]);
+                    stateWiseDeceased=stateWiseDeceased+Number(data[req.params.id]);
                   }    
                   
                   
 
-                }
-               
-                
+                })
+			
                 var totalTodayP ,totalToday;
                 dateWiseData=[];
-            for (var k=0;k<pdata.length;k++){
+			for (var k = 0; k < pdata.length; k++){
               var s= pdata[k]['Date'];
-              s=s.toString().substr(-6)
+				s = s.toString().substr(-6)
+				
              if(getThisMonth()==s ||getNextMonth()==s ){
-              if(k<=confirmedArray.length){
-              totalToday=confirmedArray[k];
+				 if (k <= confirmedArray.length) {
+				 
+				  totalToday = confirmedArray[k-1];
               }
               else{
                 totalToday = "---";
@@ -171,7 +167,8 @@ today=getYesDate();
 
             }
             summary = {
-                "total":stateWiseConfrimed,
+			 
+				"total": stateWiseConfrimed,
                 "discharged": stateWiseRecovered,
                 "deaths": stateWiseDeceased,
                 "totalP":stateWisePredicted,
