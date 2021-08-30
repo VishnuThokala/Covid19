@@ -46,19 +46,20 @@ function getNextMonth(){
   return month[mm]+'-'+yyyy.toString().substr(-2); 
 }
 app.get('/', (req, res) => {
+  
 	
-		request('https://covid19futurepredictor.herokuapp.com/predictor', { json: true }, (err, result, body) => {
-			if (err) {
-				return err;
-			}
-			else {
-				let data = JSON.stringify(body['states_daily'], null, 2);
+		// request('https://covid19futurepredictor.herokuapp.com/predictor', { json: true }, (err, result, body) => {
+		// 	if (err) {
+		// 		return err;
+		// 	}
+		// 	else {
+		// 		let data = JSON.stringify(body['states_daily'], null, 2);
 
-				fs.writeFileSync('./pdata.json',data );
+		// 		fs.writeFileSync('./pdata.json',data );
 
-			}
-		}
-		)
+		// 	}
+		// }
+		// )
 	
 
     request('https://api.covid19india.org/states_daily.json',{json:true},(err,result,body)=>{
@@ -71,7 +72,10 @@ app.get('/', (req, res) => {
             var predicted=0 ;
 
             
-            data = body['states_daily'];
+          data = body['states_daily'];
+          // console.log(data[1562])
+          
+          console.log(data.length)
             for(var i=0;i<data.length;i++ ){
                 
                
@@ -90,12 +94,12 @@ app.get('/', (req, res) => {
                   }  
             }
             var c=0;
-			today = getYesDate();
+			      today = getYesDate();
             for(var k=0;k<pdata.length ;k++)
-			{
+			     {
              if(pdata[k]['Date']==today){
 				 
-			  predicted = pdata[k]['tt'];
+			      predicted = pdata[k]['tt'];
 			  
                break;
              }
@@ -115,7 +119,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/stateview/:id',(req,res)=>{
-
+  console.log("len:", pdata.length)
+  
 today=getYesDate();
 
     request('https://api.covid19india.org/states_daily.json',{json:true},(err,result,body)=>{
@@ -153,14 +158,13 @@ today=getYesDate();
 			
                 var totalTodayP ,totalToday;
                 dateWiseData=[];
-			for (var k = 0; k < pdata.length; k++){
+          for (var k = 0; k < pdata.length; k++){
+            
               var s= pdata[k]['Date'];
-				s = s.toString().substr(-6)
-				
+              s = s.toString().substr(-6)
              if(getThisMonth()==s ||getNextMonth()==s ){
-				 if (k <= confirmedArray.length) {
-				 
-				  totalToday = confirmedArray[k-1];
+              if (k <= confirmedArray.length) {
+                totalToday = confirmedArray[k-1];
               }
               else{
                 totalToday = "---";
@@ -171,9 +175,8 @@ today=getYesDate();
                 "date":date,
                 "total":totalToday,  
                 "totalP":totalTodayP,
-			
              }
-            
+             
         
              dateWiseData.push(summaryToday);
                   
@@ -184,16 +187,14 @@ today=getYesDate();
 
             }
             summary = {
-			 
-				"total": stateWiseConfrimed,
+			        	"total": stateWiseConfrimed,
                 "discharged": stateWiseRecovered,
                 "deaths": stateWiseDeceased,
                 "totalP":stateWisePredicted,
-				"plot":plotDict[req.params.id],
-				"name":namesDict[req.params.id],
-				"img" :stateDict[req.params.id]
+                "plot":plotDict[req.params.id],
+                "name":namesDict[req.params.id],
+                "img" :stateDict[req.params.id]
              }
-            
              res.render('stateview',{data:{summary:summary,summaryToday:dateWiseData }})
         }
     })
