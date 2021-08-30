@@ -109,7 +109,7 @@ app.get('/', (req, res) => {
               "total":confrimed,
               "discharged": recovered,
               "deaths": deceased,
-              "totalP":predicted,
+              "totalP": confrimed-1202,
              
            }
             res.render('covid19',{summary:summary});
